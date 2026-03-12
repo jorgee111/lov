@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Bus, BarChart3, Bell, Search, User, Route, Shield } from "lucide-react";
+import { Home, Bus, BarChart3, Bell, Search, User, Route, Shield, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
