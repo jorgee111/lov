@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Bus, BarChart3, Bell, Search, User, AlertTriangle, Route, Shield } from "lucide-react";
+import { Home, Bus, BarChart3, Bell, Search, User, Route, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,14 +17,14 @@ const BottomNav = () => {
   ];
 
   const conductorItems = [
-    { to: "/conductor", icon: Home, label: "Panel" },
+    { to: "/", icon: Home, label: "Panel" },
     { to: "/lineas", icon: Route, label: "Rutas" },
     { to: "/alertas", icon: Bell, label: "Alertas" },
     { to: "/perfil", icon: User, label: "Perfil" },
   ];
 
   const gestorItems = [
-    { to: "/gestor", icon: Shield, label: "Panel" },
+    { to: "/", icon: Shield, label: "Panel" },
     { to: "/lineas", icon: Bus, label: "Líneas" },
     { to: "/trafico", icon: BarChart3, label: "Tráfico" },
     { to: "/alertas", icon: Bell, label: "Alertas" },
