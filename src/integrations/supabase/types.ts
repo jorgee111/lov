@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      buses: {
+        Row: {
+          created_at: string
+          destination: string
+          driver_id: string | null
+          id: string
+          is_active: boolean
+          lat: number
+          line: string
+          lng: number
+          occupancy_level: string
+          occupancy_pct: number
+          speed_kmh: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          driver_id?: string | null
+          id?: string
+          is_active?: boolean
+          lat: number
+          line: string
+          lng: number
+          occupancy_level?: string
+          occupancy_pct?: number
+          speed_kmh?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          driver_id?: string | null
+          id?: string
+          is_active?: boolean
+          lat?: number
+          line?: string
+          lng?: number
+          occupancy_level?: string
+          occupancy_pct?: number
+          speed_kmh?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       incidents: {
         Row: {
           created_at: string
