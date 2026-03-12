@@ -1,18 +1,37 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Bus, BarChart3, Bell, Search } from "lucide-react";
+import { Home, Bus, BarChart3, Bell, Search, User, AlertTriangle, Route, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-
-const navItems = [
-  { to: "/", icon: Home, label: "Inicio" },
-  { to: "/lineas", icon: Bus, label: "Líneas" },
-  { to: "/buscar", icon: Search, label: "Buscar" },
-  { to: "/trafico", icon: BarChart3, label: "Tráfico" },
-  { to: "/alertas", icon: Bell, label: "Alertas" },
-];
+import { useAuth } from "@/contexts/AuthContext";
 
 const BottomNav = () => {
   const location = useLocation();
+  const { role } = useAuth();
+
+  const pasajeroItems = [
+    { to: "/", icon: Home, label: "Inicio" },
+    { to: "/lineas", icon: Bus, label: "Líneas" },
+    { to: "/buscar", icon: Search, label: "Buscar" },
+    { to: "/trafico", icon: BarChart3, label: "Tráfico" },
+    { to: "/perfil", icon: User, label: "Perfil" },
+  ];
+
+  const conductorItems = [
+    { to: "/conductor", icon: Home, label: "Panel" },
+    { to: "/lineas", icon: Route, label: "Rutas" },
+    { to: "/alertas", icon: Bell, label: "Alertas" },
+    { to: "/perfil", icon: User, label: "Perfil" },
+  ];
+
+  const gestorItems = [
+    { to: "/gestor", icon: Shield, label: "Panel" },
+    { to: "/lineas", icon: Bus, label: "Líneas" },
+    { to: "/trafico", icon: BarChart3, label: "Tráfico" },
+    { to: "/alertas", icon: Bell, label: "Alertas" },
+    { to: "/perfil", icon: User, label: "Perfil" },
+  ];
+
+  const navItems = role === "conductor" ? conductorItems : role === "gestor" ? gestorItems : pasajeroItems;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/90 backdrop-blur-xl">
