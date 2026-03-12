@@ -53,11 +53,9 @@ const AuthPage = () => {
         className="w-full max-w-sm"
       >
         <div className="text-center mb-8">
-          <div className="h-14 w-14 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-4">
-            <Bus className="h-7 w-7 text-primary-foreground" />
-          </div>
+          <img src={logo} alt="CityFlow" className="h-28 w-28 mx-auto mb-2 object-contain" />
           <h1 className="text-3xl font-display font-bold text-foreground">CityFlow</h1>
-          <p className="text-sm text-muted-foreground mt-1">Transporte inteligente para Madrid</p>
+          <p className="text-sm text-muted-foreground mt-1">Saving Time · Improving Lives</p>
         </div>
 
         <form onSubmit={handleSubmit} className="glass-card p-6 space-y-4">

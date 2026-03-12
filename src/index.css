@@ -80,16 +80,16 @@
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(38 80% 45%));
+    background: linear-gradient(135deg, hsl(205 78% 50%), hsl(210 85% 38%));
   }
 
   .gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)), hsl(195 70% 25%));
+    background: linear-gradient(135deg, hsl(200 70% 40%), hsl(210 60% 28%));
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(38 80% 65%));
+    background-image: linear-gradient(135deg, hsl(205 78% 55%), hsl(200 70% 70%));
   }
 
   .safe-bottom {

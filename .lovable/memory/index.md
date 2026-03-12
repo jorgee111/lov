@@ -1,0 +1,12 @@
+Design system for CityFlow transit app. Blue theme matching logo.
+- Fonts: Space Grotesk (display), DM Sans (body)
+- Primary: blue hsl(205,78%,50%), Background: dark blue hsl(210,30%,6%)
+- Accent: teal-blue hsl(200,70%,40%), Success: green, Warning: amber, Destructive: red
+- Custom tokens: occupancy-low/medium/high, glass-card utility
+- Mobile-first design with bottom nav
+- Spanish language UI
+- 3 roles: pasajero, conductor, gestor (stored in user_roles table)
+- Roles use separate table with has_role() security definer function
+- Profiles auto-created on signup via trigger
+- Default role on signup: pasajero
+- Logo at src/assets/logo.png
