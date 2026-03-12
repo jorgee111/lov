@@ -14,6 +14,7 @@ import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import ConductorDashboard from "./pages/ConductorDashboard";
 import GestorDashboard from "./pages/GestorDashboard";
+import MapaPage from "./pages/MapaPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
