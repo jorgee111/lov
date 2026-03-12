@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, Bus, BarChart3, Bell, Search, User, Route, Shield } from "lucide-react";
+import { Home, Bus, BarChart3, Bell, Search, User, Route, Shield, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,8 +10,8 @@ const BottomNav = () => {
 
   const pasajeroItems = [
     { to: "/", icon: Home, label: "Inicio" },
+    { to: "/mapa", icon: MapPin, label: "Mapa" },
     { to: "/lineas", icon: Bus, label: "Líneas" },
-    { to: "/buscar", icon: Search, label: "Buscar" },
     { to: "/trafico", icon: BarChart3, label: "Tráfico" },
     { to: "/perfil", icon: User, label: "Perfil" },
   ];

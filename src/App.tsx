@@ -14,6 +14,7 @@ import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
 import ConductorDashboard from "./pages/ConductorDashboard";
 import GestorDashboard from "./pages/GestorDashboard";
+import MapaPage from "./pages/MapaPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const ProtectedRoutes = () => {
         <Route path="/" element={<RoleHome />} />
         <Route path="/lineas" element={<LineasPage />} />
         <Route path="/buscar" element={<BuscarPage />} />
+        <Route path="/mapa" element={<MapaPage />} />
         <Route path="/trafico" element={<TraficoPage />} />
         <Route path="/alertas" element={<AlertasPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
