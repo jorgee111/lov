@@ -34,7 +34,8 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        toast.success("Cuenta creada. Revisa tu email para confirmar.");
+        toast.success("Cuenta creada correctamente");
+        navigate("/");
       }
     } catch (error: any) {
       toast.error(error.message || "Error de autenticación");

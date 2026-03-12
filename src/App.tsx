@@ -18,8 +18,15 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const RoleHome = () => {
+  const { role } = useAuth();
+  if (role === "conductor") return <ConductorDashboard />;
+  if (role === "gestor") return <GestorDashboard />;
+  return <Index />;
+};
+
 const ProtectedRoutes = () => {
-  const { user, loading, role } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -31,20 +38,17 @@ const ProtectedRoutes = () => {
 
   if (!user) return <Navigate to="/auth" replace />;
 
-  // Redirect to role-specific home
-  const homeRoute = role === "conductor" ? "/conductor" : role === "gestor" ? "/gestor" : "/";
-
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<RoleHome />} />
         <Route path="/lineas" element={<LineasPage />} />
         <Route path="/buscar" element={<BuscarPage />} />
         <Route path="/trafico" element={<TraficoPage />} />
         <Route path="/alertas" element={<AlertasPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
-        <Route path="/conductor" element={role === "conductor" || role === "gestor" ? <ConductorDashboard /> : <Navigate to="/" replace />} />
-        <Route path="/gestor" element={role === "gestor" ? <GestorDashboard /> : <Navigate to="/" replace />} />
+        <Route path="/conductor" element={<ConductorDashboard />} />
+        <Route path="/gestor" element={<GestorDashboard />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>
