@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { Bus, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import logo from "@/assets/logo.png";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
