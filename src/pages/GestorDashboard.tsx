@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Shield, Users, AlertTriangle, BarChart3, Bus, MessageSquare, ChevronRight, CheckCircle, Clock, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Environment, ContactShadows } from "@react-three/drei";
+import { Bus3DModel } from "@/components/Bus3DModel";
 interface Incident {
   id: string;
   type: string;
@@ -27,11 +29,55 @@ const statusIcon = {
   resuelta: <CheckCircle className="h-4 w-4 text-success" />,
 };
 
+// Mock Telemetry Data
+const mockFleetTelemetry = [
+  {
+    id: "bus-01",
+    line: "27",
+    totalKm: 145200,
+    lastService: "2023-11-15",
+    tireWearFL: 85,
+    tireWearFR: 80,
+    tireWearRL: 45,
+    tireWearRR: 20, // Critical
+    glassCondition: "ok",
+    engineStatus: "warning"
+  },
+  {
+    id: "bus-02",
+    line: "65",
+    totalKm: 89000,
+    lastService: "2024-01-10",
+    tireWearFL: 90,
+    tireWearFR: 92,
+    tireWearRL: 88,
+    tireWearRR: 85,
+    glassCondition: "warning",
+    engineStatus: "ok"
+  },
+  {
+    id: "bus-03",
+    line: "82",
+    totalKm: 215000,
+    lastService: "2023-08-05",
+    tireWearFL: 15, // Critical
+    tireWearFR: 10, // Critical
+    tireWearRL: 12, // Critical
+    tireWearRR: 15, // Critical
+    glassCondition: "critical",
+    engineStatus: "critical"
+  }
+];
+
 const GestorDashboard = () => {
-  const [tab, setTab] = useState<"incidents" | "stats" | "users" | "suggestions">("incidents");
+  const [tab, setTab] = useState<"incidents" | "stats" | "users" | "suggestions" | "fleet3d">("incidents");
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // 3D Fleet State
+  const [selectedBusId, setSelectedBusId] = useState(mockFleetTelemetry[0].id);
+  const selectedBus = mockFleetTelemetry.find(b => b.id === selectedBusId) || mockFleetTelemetry[0];
 
   useEffect(() => {
     loadData();
@@ -63,6 +109,7 @@ const GestorDashboard = () => {
     { id: "stats" as const, icon: BarChart3, label: "Estadísticas" },
     { id: "users" as const, icon: Users, label: "Usuarios" },
     { id: "suggestions" as const, icon: MessageSquare, label: "Mensajes" },
+    { id: "fleet3d" as const, icon: Bus, label: "Flota 3D" },
   ];
 
   // Mock stats
@@ -266,6 +313,90 @@ const GestorDashboard = () => {
               )}
             </motion.div>
           ))}
+        </div>
+      )}
+
+      {/* Fleet 3D Tab */}
+      {tab === "fleet3d" && (
+        <div className="mt-4 flex flex-col gap-4 h-[calc(100vh-220px)] min-h-[500px]">
+          {/* Selector */}
+          <div className="glass-card p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Bus className="h-5 w-5 text-primary" />
+              <span className="font-display font-semibold text-sm">Seleccionar Autobús:</span>
+            </div>
+            <select 
+              className="bg-secondary text-foreground text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              value={selectedBusId}
+              onChange={(e) => setSelectedBusId(e.target.value)}
+            >
+              {mockFleetTelemetry.map(b => (
+                <option key={b.id} value={b.id}>Bus {b.id} (Línea {b.line})</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 3D Viewer Area */}
+          <div className="flex-1 glass-card overflow-hidden relative rounded-xl border border-border/50 bg-background/50">
+            <div className="absolute top-3 left-3 z-10 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-border/50">
+              <p className="text-xs font-medium text-muted-foreground">Interactúa con el modelo 3D</p>
+            </div>
+            <Canvas shadows camera={{ position: [5, 4, 6], fov: 45 }}>
+              <Suspense fallback={null}>
+                <ambientLight intensity={0.5} />
+                <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
+                <Environment preset="city" />
+                <Bus3DModel 
+                  tireWearFL={selectedBus.tireWearFL}
+                  tireWearFR={selectedBus.tireWearFR}
+                  tireWearRL={selectedBus.tireWearRL}
+                  tireWearRR={selectedBus.tireWearRR}
+                  glassCondition={selectedBus.glassCondition}
+                  engineStatus={selectedBus.engineStatus}
+                  onPartClick={(part) => toast.info(`Inspeccionando: ${part}`)}
+                />
+                <ContactShadows position={[0, -0.4, 0]} opacity={0.4} scale={10} blur={2} far={4} />
+              </Suspense>
+              <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2 + 0.1} />
+            </Canvas>
+          </div>
+
+          {/* Telemetry Data Panel */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="glass-card p-3">
+              <p className="text-[11px] text-muted-foreground mb-1">Kilometraje Total</p>
+              <p className="text-lg font-display font-bold text-foreground">
+                {selectedBus.totalKm.toLocaleString()} <span className="text-xs font-normal text-muted-foreground">km</span>
+              </p>
+            </div>
+            <div className="glass-card p-3">
+              <p className="text-[11px] text-muted-foreground mb-1">Última Revisión</p>
+              <p className="text-sm font-medium text-foreground">
+                {new Date(selectedBus.lastService).toLocaleDateString("es-ES")}
+              </p>
+            </div>
+            <div className="col-span-2 glass-card p-3 space-y-2">
+              <p className="text-[11px] text-muted-foreground">Estado de Neumáticos (Vida útil %)</p>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex justify-between items-center bg-secondary/50 px-2 py-1.5 rounded-lg">
+                  <span className="text-xs text-foreground">Frontal Izq.</span>
+                  <span className={`text-xs font-bold ${selectedBus.tireWearFL < 30 ? 'text-destructive' : selectedBus.tireWearFL < 60 ? 'text-warning' : 'text-success'}`}>{selectedBus.tireWearFL}%</span>
+                </div>
+                <div className="flex justify-between items-center bg-secondary/50 px-2 py-1.5 rounded-lg">
+                  <span className="text-xs text-foreground">Frontal Der.</span>
+                  <span className={`text-xs font-bold ${selectedBus.tireWearFR < 30 ? 'text-destructive' : selectedBus.tireWearFR < 60 ? 'text-warning' : 'text-success'}`}>{selectedBus.tireWearFR}%</span>
+                </div>
+                <div className="flex justify-between items-center bg-secondary/50 px-2 py-1.5 rounded-lg">
+                  <span className="text-xs text-foreground">Trasera Izq.</span>
+                  <span className={`text-xs font-bold ${selectedBus.tireWearRL < 30 ? 'text-destructive' : selectedBus.tireWearRL < 60 ? 'text-warning' : 'text-success'}`}>{selectedBus.tireWearRL}%</span>
+                </div>
+                <div className="flex justify-between items-center bg-secondary/50 px-2 py-1.5 rounded-lg">
+                  <span className="text-xs text-foreground">Trasera Der.</span>
+                  <span className={`text-xs font-bold ${selectedBus.tireWearRR < 30 ? 'text-destructive' : selectedBus.tireWearRR < 60 ? 'text-warning' : 'text-success'}`}>{selectedBus.tireWearRR}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
